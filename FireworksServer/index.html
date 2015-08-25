@@ -26,6 +26,7 @@
     <script src="Scripts/jquery-1.6.4.min.js"></script>
     <script src="Scripts/jquery.signalR-2.2.0.min.js"></script>
     <script src="signalr/hubs"></script>
+    <script src="MyScript/App.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', function () {
 
@@ -58,8 +59,6 @@
                     $.connection.hub.start().done(function(){
                         chat.server.send(x, y);
                     });
-
-                    //CreateBoom(scene, position);
                 }
             };
 
@@ -71,6 +70,12 @@
             fountain.visibility = 0.0;
             fountain.position = position ;
 
+//            var music = new BABYLON.Sound("fireworks", "sounds/fireworks.mp3", scene, function () {
+//
+//            }, { loop: false, autoplay: true });
+//
+//            music.attachToMesh(fountain);
+
             var particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
             particleSystem.particleTexture = new BABYLON.Texture("textures/flare.png", scene);
 
@@ -80,17 +85,17 @@
             particleSystem.maxEmitBox = new BABYLON.Vector3(0, 0, 0);
 
             particleSystem.color1 = new BABYLON.Color4(1.0, 0.0, 0.0, 1.0);
-            particleSystem.color2 = new BABYLON.Color4(0.0, 1.0, 0.0, 1.0);
+            particleSystem.color2 = new BABYLON.Color4(1.0, 0.5, 0.0, 1.0);
 
             particleSystem.colorDead = new BABYLON.Color4(0.0, 0.0, 0.0, 0.5);
 
-            particleSystem.minSize = 0.1;
+            particleSystem.minSize = 0.09;
             particleSystem.maxSize = 0.2;
 
             particleSystem.minLifeTime = 0.3;
             particleSystem.maxLifeTime = 0.7;
 
-            particleSystem.emitRate = 1500;
+            particleSystem.emitRate = 1000;
 
             particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
 
@@ -103,14 +108,16 @@
             particleSystem.maxAngularSpeed = Math.PI;
 
             particleSystem.minEmitPower = 1;
-            particleSystem.maxEmitPower = 4;
-            particleSystem.updateSpeed = 0.003;
+            particleSystem.maxEmitPower = 5;
+            particleSystem.updateSpeed = 0.005;
 
             particleSystem.start();
             setTimeout(function(){
                 particleSystem.stop();
+
                 setTimeout(function(){
                     fountain.dispose();
+                    //music.dispose();
                 }, 3000);
 
             }, 500);
@@ -130,9 +137,6 @@
         window.addEventListener('resize', function () {
                 engine.resize();
         });
-
-//
-
 
 });
     </script>
