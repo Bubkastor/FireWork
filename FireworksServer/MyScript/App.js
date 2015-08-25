@@ -37,6 +37,7 @@ function start(){
             if (pickResult.hit) {
                 var x = pickResult.pickedPoint.x;
                 var y = pickResult.pickedPoint.y;
+				appInsights.trackEvent("click");
                 var position = new BABYLON.Vector3(x, y, 0);
                 $.connection.hub.start().done(function(){
                     chat.server.send(x, y);
