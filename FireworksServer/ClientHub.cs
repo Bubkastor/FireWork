@@ -8,13 +8,10 @@ namespace FireworksServer
 {
     public class ClientHub: Hub
     {
-        public void Send(string name, string message)
-        {
-            Clients.All.broadcastMessage(name, message);
-        }
-        public void SendCoord(int x, int y)
+        public void Send(float x, float y)
         {
             Clients.All.broadcastMessage(x, y);
         }
+
     }
 }

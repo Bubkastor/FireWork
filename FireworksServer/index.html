@@ -28,7 +28,9 @@
     <script src="signalr/hubs"></script>
     <script>
         window.addEventListener('DOMContentLoaded', function () {
-        // get the canvas DOM element
+
+        var chat = $.connection.clientHub;
+
         var canvas = document.getElementById('renderCanvas');
 
         // load the 3D engine
@@ -36,75 +38,103 @@
 
         // createScene function that creates and return the scene
         var createScene = function () {
-                // create a basic BJS Scene object
-                var scene = new BABYLON.Scene(engine);
+            var scene = new BABYLON.Scene(engine);
 
-                // create a FreeCamera, and set its position to (x:0, y:5, z:-10)
-                
-                var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5, -10), scene);
+            var camera = new BABYLON.TargetCamera('camera1', new BABYLON.Vector3(0, 0, 10), scene);
+            camera.setTarget(BABYLON.Vector3.Zero());
+            camera.attachControl(canvas, false);
+            var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
 
-                // target the camera to scene origin
-                camera.setTarget(BABYLON.Vector3.Zero());
+            var wall = BABYLON.Mesh.CreatePlane("wall", 40.0, scene);
+            wall.material = new BABYLON.StandardMaterial("wallMat", scene);
+            wall.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
 
-                // attach the camera to the canvas
-                camera.attachControl(canvas, false);
 
-                // create a basic light, aiming 0,1,0 - meaning, to the sky
-                var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
+            scene.onPointerDown = function (evt, pickResult) {
+                if (pickResult.hit) {
+                    var x = pickResult.pickedPoint.x;
+                    var y = pickResult.pickedPoint.y;
+                    var position = new BABYLON.Vector3(x, y, 0);
+                    $.connection.hub.start().done(function(){
+                        chat.server.send(x, y);
+                    });
 
-                // create a built-in "sphere" shape; its constructor takes 5 params: name, width, depth, subdivisions, scene
-                var sphere = new BABYLON.Mesh.CreateSphere('sphere1', 16, 2, scene);
+                    //CreateBoom(scene, position);
+                }
+            };
 
-                // move the sphere upward 1/2 of its height
-                sphere.position.y = 1;
+            return scene;
+        };
 
-                // create a built-in "ground" shape; its constructor takes the same 5 params as the sphere's one
-                var ground = new BABYLON.Mesh.CreateGround('ground1', 6, 6, 2, scene);
+        function CreateBoom(scene, position){
+            var fountain = BABYLON.Mesh.CreateBox("foutain", 0.1, scene);
+            fountain.visibility = 0.0;
+            fountain.position = position ;
 
-                // return the created scene
-                return scene;
+            var particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
+            particleSystem.particleTexture = new BABYLON.Texture("textures/flare.png", scene);
+
+            particleSystem.emitter = fountain;
+
+            particleSystem.minEmitBox = new BABYLON.Vector3(0, 0, 0);
+            particleSystem.maxEmitBox = new BABYLON.Vector3(0, 0, 0);
+
+            particleSystem.color1 = new BABYLON.Color4(1.0, 0.0, 0.0, 1.0);
+            particleSystem.color2 = new BABYLON.Color4(0.0, 1.0, 0.0, 1.0);
+
+            particleSystem.colorDead = new BABYLON.Color4(0.0, 0.0, 0.0, 0.5);
+
+            particleSystem.minSize = 0.1;
+            particleSystem.maxSize = 0.2;
+
+            particleSystem.minLifeTime = 0.3;
+            particleSystem.maxLifeTime = 0.7;
+
+            particleSystem.emitRate = 1500;
+
+            particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+
+            particleSystem.gravity = new BABYLON.Vector3(0, -11, 0);
+
+            particleSystem.direction1 = new BABYLON.Vector3(1, 1, 0);
+            particleSystem.direction2 = new BABYLON.Vector3(-1, 1, 0);
+
+            particleSystem.minAngularSpeed = 0;
+            particleSystem.maxAngularSpeed = Math.PI;
+
+            particleSystem.minEmitPower = 1;
+            particleSystem.maxEmitPower = 4;
+            particleSystem.updateSpeed = 0.003;
+
+            particleSystem.start();
+            setTimeout(function(){
+                particleSystem.stop();
+                setTimeout(function(){
+                    fountain.dispose();
+                }, 3000);
+
+            }, 500);
+
         }
 
-        // call the createScene function
         var scene = createScene();
+        chat.client.broadcastMessage = function (x, y) {
+            var position = new BABYLON.Vector3(x, y, 0);
+            CreateBoom(scene, position);
+        };
 
-        // run the render loop
         engine.runRenderLoop(function () {
                 scene.render();
         });
 
-        // the canvas/window resize event handler
         window.addEventListener('resize', function () {
                 engine.resize();
         });
+
+//
+
+
 });
-
-
-// var chat = $.connection.clientHub;
-//
-// chat.client.broadcastMessage = function (name, message) {
-//
-//         var encodedName = $('<div />').text(name).html();
-//         var encodedMsg = $('<div />').text(message).html();
-//
-//         $('#discussion').append('<li><strong>' + encodedName
-//                 + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
-// };
-//
-// $('#displayname').val(prompt('Enter your name:', ''));
-//
-// $('#message').focus();
-//
-// var done = function () {
-//         $('#sendmessage').click(function () {
-//
-//                 chat.server.send($('#displayname').val(), $('#message').val());
-//
-//                 $('#message').val('').focus();
-//         });
-// };
-//
-// $.connection.hub.start().done(done);
     </script>
 </body>
 </html>
