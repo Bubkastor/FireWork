@@ -96,6 +96,8 @@
   <ItemGroup>
     <Content Include="MyScript\Partical.js" />
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\Bubkastor.pubxml" />
+    <None Include="Properties\PublishProfiles\Bubokastor.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -112,6 +114,8 @@
     <Content Include="Scripts\jquery-1.6.4.min.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
+    <Content Include="sounds\fireworks.mp3" />
+    <Content Include="textures\flare.png" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -119,10 +123,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup1.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="sounds\" />
-    <Folder Include="textures\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -141,8 +142,7 @@
           <IISUrl>http://localhost:59915/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
+          <CustomServerUrl>http://192.168.1.2:8081</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
