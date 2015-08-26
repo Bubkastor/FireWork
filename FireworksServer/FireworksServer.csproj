@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyScript\Partical.js" />
+    <Content Include="MyScript\Rocket.js" />
     <Content Include="packages.config" />
     <Content Include="ApplicationInsights.config" />
     <None Include="Properties\PublishProfiles\Bubkastor.pubxml" />
@@ -143,6 +144,7 @@
     <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="sounds\fireworks.mp3" />
     <Content Include="textures\flare.png" />
+    <Content Include="textures\rocket.png" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

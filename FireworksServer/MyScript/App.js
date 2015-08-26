@@ -24,7 +24,9 @@ function start(){
         var scene = new BABYLON.Scene(engine);
 
         var camera = new BABYLON.TargetCamera('camera1', new BABYLON.Vector3(0, 0, 10), scene);
-        camera.setTarget(BABYLON.Vector3.Zero());
+
+        camera.setTarget(new BABYLON.Vector3(0,0,0));
+
         camera.attachControl(canvas, false);
         var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
 
@@ -32,13 +34,20 @@ function start(){
         wall.material = new BABYLON.StandardMaterial("wallMat", scene);
         wall.material.emissiveColor = new BABYLON.Color3(1, 1, 1);
 
+        // Create a sprite manager to optimize GPU ressources
+        // Parameters : name, imgUrl, capacity, cellSize, scene
+
+
+
+
+
+        //Finally, launch animations on box1, from key 0 to key 100 with loop activated
 
         scene.onPointerDown = function (evt, pickResult) {
             if (pickResult.hit) {
                 var x = pickResult.pickedPoint.x;
                 var y = pickResult.pickedPoint.y;
 				appInsights.trackEvent("click");
-                var position = new BABYLON.Vector3(x, y, 0);
                 $.connection.hub.start().done(function(){
                     chat.server.send(x, y);
                 });
@@ -52,6 +61,7 @@ function start(){
     chat.client.broadcastMessage = function (x, y) {
         var position = new BABYLON.Vector3(x, y, 0);
         //CreateBoom(scene, position);
+        console.log('position:' + x + ' ' + y);
         var boom = new ParticalSystem({'position': position, /*'music': new BABYLON.Sound("fireworks", "sounds/fireworks.mp3", scene,
             function(){
                 console.log('Sound loaded')

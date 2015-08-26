@@ -2,9 +2,9 @@
 
 var TIME_LIFE = 3000;
 var TIME_REMOVE = 500;
-class ParticalSystem{
-    constructor(option, scene){
+function ParticalSystem(option,scene){
         this.option = option;
+        this.rocket = new Rocket(option, scene);
         this.fountain = BABYLON.Mesh.CreateBox("point", 0.1, scene);
         this.fountain.visibility = 0.0;
         this.fountain.position = option.position || new BABYLON.Vector3(0, 0, 0);
@@ -48,9 +48,8 @@ class ParticalSystem{
         this.particleSystem.maxEmitPower = 5;
         this.particleSystem.updateSpeed = 0.005;
         option = null;
-    }
 
-    start(){
+    var launch = function(){
         this.particleSystem.start();
         var self = this;
         setTimeout(function(){
@@ -61,5 +60,8 @@ class ParticalSystem{
             },TIME_LIFE + self.option.maxLifeTime);
 
         },TIME_REMOVE + self.option.maxLifeTime);
+    };
+    this.start = function(){
+        this.rocket.start(launch, this);
     }
 }
