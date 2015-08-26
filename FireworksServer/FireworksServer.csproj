@@ -121,6 +121,7 @@
   <ItemGroup>
     <Content Include="MyScript\Partical.js" />
     <Content Include="MyScript\Rocket.js" />
+    <Content Include="MyScript\Scena.js" />
     <Content Include="MyScript\UserCount.js" />
     <Content Include="packages.config" />
     <Content Include="ApplicationInsights.config" />
